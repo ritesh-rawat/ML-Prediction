@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ritesh Rawat — ML Projects</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080810;--surface:#0f0f1a;--card:#13131e;--border:rgba(255,255,255,0.07);
+  --accent:#00e5a0;--accent2:#7c6aff;--accent3:#ff6b6b;
+  --text:#f0f0f8;--muted:#7878a0;
+  --mono:'Space Mono',monospace;--sans:'Syne',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:hidden}
+
+/* ── GRID BG ── */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(0,229,160,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,160,0.03) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+
+/* ── CURSOR GLOW ── */
+.cursor-glow{
+  position:fixed;width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,229,160,0.06) 0%,transparent 70%);
+  pointer-events:none;z-index:1;transform:translate(-50%,-50%);
+  transition:opacity 0.3s;
+}
+
+/* ── NAVBAR ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 2rem;
+  background:rgba(8,8,16,0.8);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.logo{font-family:var(--mono);font-size:13px;color:var(--accent);letter-spacing:.06em}
+.nav-links{display:flex;gap:1.5rem}
+.nav-links a{
+  font-size:12px;color:var(--muted);text-decoration:none;
+  font-family:var(--mono);letter-spacing:.04em;
+  transition:color .2s;position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;
+  background:var(--accent);transform:scaleX(0);transition:transform .25s;
+}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{transform:scaleX(1)}
+
+/* ── PAGE ── */
+.page{max-width:940px;margin:0 auto;padding:7rem 1.5rem 5rem;position:relative;z-index:2}
+
+/* ── HERO ── */
+.hero{margin-bottom:3.5rem}
+.tag-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(0,229,160,0.08);color:var(--accent);
+  font-family:var(--mono);font-size:11px;padding:5px 14px;
+  border-radius:20px;margin-bottom:1.3rem;
+  border:1px solid rgba(0,229,160,0.2);letter-spacing:.08em;
+  animation:fadeUp .6s ease both;
+}
+.hero h1{
+  font-size:clamp(2.4rem,5.5vw,4rem);font-weight:800;line-height:1.05;
+  letter-spacing:-.03em;margin-bottom:1rem;
+  animation:fadeUp .6s .1s ease both;
+}
+.hero h1 .hl-green{color:var(--accent)}
+.hero h1 .hl-purple{color:#a89eff}
+.hero p{
+  font-size:.98rem;color:var(--muted);max-width:540px;line-height:1.75;
+  margin-bottom:2rem;animation:fadeUp .6s .2s ease both;
+}
+.meta-tags{
+  display:flex;gap:16px;flex-wrap:wrap;margin-bottom:1.8rem;
+  animation:fadeUp .6s .25s ease both;
+}
+.meta-tag{
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+  display:flex;align-items:center;gap:6px;
+}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;animation:fadeUp .6s .3s ease both}
+
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--accent);color:#080810;font-family:var(--mono);
+  font-size:12px;font-weight:700;padding:11px 22px;
+  border-radius:7px;text-decoration:none;border:none;cursor:pointer;
+  letter-spacing:.04em;transition:all .2s;
+}
+.btn-primary:hover{background:#00ffb2;transform:translateY(-1px)}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:var(--text);font-family:var(--mono);
+  font-size:12px;padding:11px 22px;border-radius:7px;
+  text-decoration:none;border:1px solid var(--border);cursor:pointer;
+  letter-spacing:.04em;transition:all .2s;
+}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.25);transform:translateY(-1px)}
+
+/* ── STATS ── */
+.stats-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+  margin-bottom:3.5rem;animation:fadeUp .6s .4s ease both;
+}
+.stat-box{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:1.1rem 1.3rem;
+  transition:border-color .25s,transform .25s;
+}
+.stat-box:hover{border-color:rgba(0,229,160,0.3);transform:translateY(-2px)}
+.stat-num{font-size:1.8rem;font-weight:800;background:linear-gradient(135deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:3px;letter-spacing:.06em;text-transform:uppercase}
+
+/* ── SECTION HEAD ── */
+.section-head{display:flex;align-items:center;gap:14px;margin-bottom:1.6rem}
+.section-head h2{font-size:.8rem;font-family:var(--mono);color:var(--muted);letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+.section-line{flex:1;height:1px;background:var(--border)}
+
+/* ── FEATURED CARD ── */
+.featured-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:2rem;margin-bottom:2.5rem;
+  position:relative;overflow:hidden;
+  animation:fadeUp .6s .5s ease both;
+}
+.featured-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+}
+.featured-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(0,229,160,0.07);color:var(--accent);
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  padding:4px 12px;border-radius:5px;margin-bottom:1rem;
+  border:1px solid rgba(0,229,160,0.15);text-transform:uppercase;
+}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 1.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.featured-inner{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media(max-width:640px){.featured-inner{grid-template-columns:1fr}}
+.featured-card h3{font-size:1.5rem;font-weight:800;margin-bottom:.6rem}
+.featured-card>p,.featured-left p{font-size:.9rem;color:var(--muted);line-height:1.65;margin-bottom:1.2rem}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1.4rem}
+.tag{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:4px;border:1px solid var(--border);color:var(--muted);letter-spacing:.04em}
+.tag.green{background:rgba(0,229,160,0.08);color:var(--accent);border-color:rgba(0,229,160,0.2)}
+.tag.purple{background:rgba(124,106,255,0.1);color:#a89eff;border-color:rgba(124,106,255,0.2)}
+.tag.red{background:rgba(255,107,107,0.08);color:#ff9a9a;border-color:rgba(255,107,107,0.15)}
+
+/* ── INTERACTIVE PREDICTOR ── */
+.predictor{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.3rem}
+.predictor-title{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem}
+.input-row{margin-bottom:.9rem}
+.input-row label{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:.4rem;letter-spacing:.05em}
+.slider-wrap{display:flex;align-items:center;gap:10px}
+input[type=range]{
+  flex:1;-webkit-appearance:none;height:4px;border-radius:4px;
+  background:linear-gradient(to right,var(--accent) var(--fill,50%),rgba(255,255,255,0.1) var(--fill,50%));
+  outline:none;cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+  background:var(--accent);border:2px solid var(--bg);
+  box-shadow:0 0 8px rgba(0,229,160,0.4);transition:transform .15s;
+}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
+.slider-val{font-family:var(--mono);font-size:11px;color:var(--accent);min-width:60px;text-align:right}
+.model-select{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.model-btn{
+  font-family:var(--mono);font-size:10px;padding:5px 12px;border-radius:5px;
+  border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s;
+}
+.model-btn.active{background:rgba(124,106,255,0.15);border-color:rgba(124,106,255,0.35);color:#a89eff}
+.predict-result{
+  background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.9rem 1rem;
+}
+.result-price{font-size:1.4rem;font-weight:800;color:var(--accent);font-family:var(--mono)}
+.result-meta{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:3px}
+.score-row{display:flex;justify-content:space-between;margin-top:.7rem;padding-top:.7rem;border-top:1px solid var(--border)}
+.score-item{text-align:center}
+.score-item .sv{font-family:var(--mono);font-size:12px;color:var(--accent2);font-weight:700}
+.score-item .sl{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:.05em}
+
+/* ── PROJECTS GRID ── */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:2.5rem}
+.proj-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:1.3rem;cursor:pointer;
+  transition:border-color .2s,transform .2s,box-shadow .2s;
+  text-decoration:none;display:block;position:relative;overflow:hidden;
+}
+.proj-card::after{
+  content:'';position:absolute;inset:0;border-radius:12px;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(0,229,160,0.05) 0%,transparent 60%);
+  opacity:0;transition:opacity .3s;pointer-events:none;
+}
+.proj-card:hover{border-color:rgba(0,229,160,0.25);transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.3)}
+.proj-card:hover::after{opacity:1}
+.proj-icon{width:40px;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:1rem}
+.proj-card h4{font-size:.95rem;font-weight:700;margin-bottom:.4rem}
+.proj-card p{font-size:.82rem;color:var(--muted);line-height:1.55;margin-bottom:.9rem}
+.proj-tags{display:flex;flex-wrap:wrap;gap:6px}
+.proj-tag{font-family:var(--mono);font-size:9px;padding:3px 8px;border-radius:3px;border:1px solid var(--border);color:var(--muted)}
+.proj-arrow{position:absolute;top:1.2rem;right:1.2rem;font-size:14px;color:var(--muted);opacity:0;transition:opacity .2s,transform .2s}
+.proj-card:hover .proj-arrow{opacity:1;transform:translate(2px,-2px)}
+
+/* ── MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
+  z-index:200;display:flex;align-items:center;justify-content:center;padding:1.5rem;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{
+  background:var(--card);border:1px solid rgba(255,255,255,0.12);
+  border-radius:16px;padding:2rem;max-width:520px;width:100%;
+  position:relative;transform:translateY(20px) scale(.97);
+  transition:transform .3s ease,opacity .25s;
+}
+.modal-overlay.open .modal{transform:translateY(0) scale(1)}
+.modal-close{
+  position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,0.06);
+  border:none;color:var(--muted);cursor:pointer;border-radius:6px;
+  width:30px;height:30px;font-size:16px;display:flex;align-items:center;justify-content:center;
+  transition:background .2s;
+}
+.modal-close:hover{background:rgba(255,255,255,0.12);color:var(--text)}
+.modal-icon{font-size:28px;margin-bottom:.8rem}
+.modal h3{font-size:1.3rem;font-weight:800;margin-bottom:.5rem}
+.modal p{font-size:.88rem;color:var(--muted);line-height:1.65;margin-bottom:1rem}
+.modal-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:1.2rem}
+.modal-stat-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.2rem}
+.modal-stat{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.8rem 1rem}
+.ms-val{font-family:var(--mono);font-size:1.1rem;font-weight:700;color:var(--accent)}
+.ms-lbl{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px;letter-spacing:.05em;text-transform:uppercase}
+.modal-actions{display:flex;gap:10px}
+
+/* ── CONCEPTS ── */
+.concepts-section{margin-top:2.5rem}
+.concepts-grid{display:flex;flex-wrap:wrap;gap:10px}
+.concept-chip{
+  font-family:var(--mono);font-size:11px;padding:7px 16px;
+  border:1px solid var(--border);border-radius:20px;color:var(--muted);
+  background:var(--card);cursor:default;transition:all .2s;
+}
+.concept-chip:hover{border-color:rgba(0,229,160,0.3);color:var(--accent);background:rgba(0,229,160,0.05)}
+
+/* ── SKILLS BAR ── */
+.skills-section{margin-top:2.5rem}
+.skill-item{margin-bottom:1rem}
+.skill-header{display:flex;justify-content:space-between;margin-bottom:.4rem}
+.skill-name{font-family:var(--mono);font-size:11px;color:var(--text)}
+.skill-pct{font-family:var(--mono);font-size:11px;color:var(--accent)}
+.skill-bar{height:4px;background:rgba(255,255,255,0.07);border-radius:4px;overflow:hidden}
+.skill-fill{height:100%;border-radius:4px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+
+/* ── FOOTER ── */
+footer{
+  margin-top:4rem;padding:1.5rem 0;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;
+  position:relative;z-index:2;
+}
+.footer-left{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.footer-left span{color:var(--accent)}
+.footer-right{display:flex;gap:16px}
+.footer-right a{font-family:var(--mono);font-size:12px;color:var(--muted);text-decoration:none;transition:color .2s}
+.footer-right a:hover{color:var(--text)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.anim{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.anim.visible{opacity:1;transform:translateY(0)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  nav{padding:1rem}
+  .nav-links{gap:1rem}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-glow" id="glow"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">ritesh.rawat / ml-lab</div>
+  <div class="nav-links">
+    <a href="#projects">projects</a>
+    <a href="#concepts">concepts</a>
+    <a href="#skills">skills</a>
+    <a href="https://github.com/ritesh-rawat/ML-Prediction" target="_blank">github</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="tag-pill">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="5" cy="5" r="1.5" fill="currentColor"/></svg>
+      machine learning with python
+    </div>
+    <h1>Practical <span class="hl-green">ML</span><br><span class="hl-purple">Projects</span><br>from scratch</h1>
+    <p>End-to-end machine learning projects — from linear regression to neural networks — built with clean Python and explained concept by concept.</p>
+    <div class="meta-tags">
+      <span class="meta-tag">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        Python 3.x
+      </span>
+      <span class="meta-tag">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        Jupyter Notebooks
+      </span>
+      <span class="meta-tag">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        Beginner Friendly
+      </span>
+    </div>
+    <div class="hero-actions">
+      <a href="https://github.com/ritesh-rawat/ML-Prediction" target="_blank" class="btn-primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        View on GitHub
+      </a>
+      <a href="#projects" class="btn-ghost">Explore Projects</a>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-num">15+</div><div class="stat-label">projects</div></div>
+    <div class="stat-box"><div class="stat-num">10+</div><div class="stat-label">algorithms</div></div>
+    <div class="stat-box"><div class="stat-num">3</div><div class="stat-label">ml libraries</div></div>
+    <div class="stat-box"><div class="stat-num">∞</div><div class="stat-label">to learn</div></div>
+  </div>
+
+  <!-- FEATURED -->
+  <div class="section-head anim">
+    <h2>featured project</h2><div class="section-line"></div>
+  </div>
+  <div class="featured-card anim">
+    <div class="featured-badge"><div class="dot"></div> interactive demo</div>
+    <div class="featured-inner">
+      <div class="featured-left">
+        <h3>House Price Predictor</h3>
+        <p style="font-size:.9rem;color:var(--muted);line-height:1.65;margin-bottom:1.2rem">Multi-model regression pipeline comparing Linear Regression, Random Forest, and XGBoost on real estate data. Adjust sliders to get a live estimate.</p>
+        <div class="tag-row">
+          <span class="tag green">scikit-learn</span>
+          <span class="tag purple">pandas</span>
+          <span class="tag">numpy</span>
+          <span class="tag green">regression</span>
+          <span class="tag purple">feature engineering</span>
+          <span class="tag red">xgboost</span>
+        </div>
+        <a href="https://github.com/ritesh-rawat/ML-Prediction" target="_blank" class="btn-ghost" style="font-size:11px;padding:8px 16px">View Notebook →</a>
+      </div>
+      <div class="predictor">
+        <div class="predictor-title">live price estimator</div>
+        <div class="input-row">
+          <label>AREA (sq ft)</label>
+          <div class="slider-wrap">
+            <input type="range" id="sl-area" min="500" max="5000" value="1200" oninput="updatePredictor()">
+            <span class="slider-val" id="lbl-area">1200</span>
+          </div>
+        </div>
+        <div class="input-row">
+          <label>BEDROOMS</label>
+          <div class="slider-wrap">
+            <input type="range" id="sl-bed" min="1" max="6" value="3" oninput="updatePredictor()">
+            <span class="slider-val" id="lbl-bed">3</span>
+          </div>
+        </div>
+        <div class="input-row">
+          <label>LOCATION SCORE (1–10)</label>
+          <div class="slider-wrap">
+            <input type="range" id="sl-loc" min="1" max="10" value="7" oninput="updatePredictor()">
+            <span class="slider-val" id="lbl-loc">7</span>
+          </div>
+        </div>
+        <div class="model-select" id="model-select">
+          <button class="model-btn" onclick="setModel('lr')">Linear Reg</button>
+          <button class="model-btn active" onclick="setModel('rf')">Random Forest</button>
+          <button class="model-btn" onclick="setModel('xgb')">XGBoost</button>
+        </div>
+        <div class="predict-result">
+          <div class="result-price" id="pred-price">₹42,26,850</div>
+          <div class="result-meta" id="pred-meta">model: random forest</div>
+          <div class="score-row">
+            <div class="score-item"><div class="sv" id="pred-r2">0.923</div><div class="sl">R² score</div></div>
+            <div class="score-item"><div class="sv" id="pred-rmse">₹1.84L</div><div class="sl">RMSE</div></div>
+            <div class="score-item"><div class="sv" id="pred-mae">₹1.21L</div><div class="sl">MAE</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECTS GRID -->
+  <div id="projects" class="section-head anim">
+    <h2>all projects</h2><div class="section-line"></div>
+  </div>
+  <div class="projects-grid" id="proj-grid"></div>
+
+  <!-- SKILLS -->
+  <div id="skills" class="skills-section anim">
+    <div class="section-head">
+      <h2>tech proficiency</h2><div class="section-line"></div>
+    </div>
+    <div id="skills-list"></div>
+  </div>
+
+  <!-- CONCEPTS -->
+  <div id="concepts" class="concepts-section anim">
+    <div class="section-head">
+      <h2>core concepts covered</h2><div class="section-line"></div>
+    </div>
+    <div class="concepts-grid" id="concepts-grid"></div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- FOOTER -->
+<footer style="max-width:940px;margin:0 auto;padding-left:1.5rem;padding-right:1.5rem">
+  <div class="footer-left">built with <span>python</span> by ritesh rawat — 2025</div>
+  <div class="footer-right">
+    <a href="https://github.com/ritesh-rawat/ML-Prediction" target="_blank">github</a>
+    <a href="mailto:ritesh@example.com">contact</a>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-icon" id="m-icon"></div>
+    <h3 id="m-title"></h3>
+    <p id="m-desc"></p>
+    <div class="modal-tags" id="m-tags"></div>
+    <div class="modal-stat-row" id="m-stats"></div>
+    <div class="modal-actions">
+      <a href="https://github.com/ritesh-rawat/ML-Prediction" target="_blank" class="btn-primary" style="font-size:11px;padding:9px 18px">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        Open Notebook
+      </a>
+      <button class="btn-ghost" style="font-size:11px;padding:9px 18px" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const projects = [
+  {icon:'📈',bg:'rgba(0,229,160,0.1)',title:'Linear Regression',desc:'Predict continuous outcomes using simple and multiple linear regression implemented from scratch with gradient descent.',tags:['supervised','regression','numpy'],stats:[{v:'R² 0.87',l:'accuracy'},{v:'MSE ↓',l:'loss metric'}]},
+  {icon:'🧮',bg:'rgba(124,106,255,0.12)',title:'Logistic Regression',desc:'Binary and multi-class classification with sigmoid activation, cross-entropy loss, and regularization.',tags:['classification','sklearn','sigmoid'],stats:[{v:'94.2%',l:'accuracy'},{v:'F1 0.93',l:'f1 score'}]},
+  {icon:'🌿',bg:'rgba(255,107,107,0.1)',title:'Decision Trees',desc:'Interpretable tree-based models with information gain, gini impurity, and pruning strategies.',tags:['tree','visualization','gini'],stats:[{v:'Depth 8',l:'max depth'},{v:'91.5%',l:'accuracy'}]},
+  {icon:'🌲',bg:'rgba(0,229,160,0.1)',title:'Random Forest',desc:'Ensemble learning with bootstrapped trees and majority voting — achieving higher accuracy than individual models.',tags:['ensemble','sklearn','bagging'],stats:[{v:'96.3%',l:'accuracy'},{v:'500',l:'estimators'}]},
+  {icon:'🔵',bg:'rgba(124,106,255,0.12)',title:'K-Means Clustering',desc:'Unsupervised grouping of data into k clusters by minimizing intra-cluster distance using the elbow method.',tags:['unsupervised','clustering','kmeans'],stats:[{v:'k=5',l:'clusters'},{v:'0.72',l:'silhouette'}]},
+  {icon:'⚡',bg:'rgba(255,200,100,0.1)',title:'Neural Network',desc:'Feedforward ANN with backpropagation, multiple hidden layers, batch normalization, and dropout regularization.',tags:['deep learning','tensorflow','ANN'],stats:[{v:'97.8%',l:'test acc'},{v:'5 layers',l:'architecture'}]},
+  {icon:'🛡️',bg:'rgba(0,229,160,0.1)',title:'SVM Classifier',desc:'Support Vector Machines with RBF and polynomial kernel tricks for high-dimensional classification tasks.',tags:['svm','sklearn','kernel'],stats:[{v:'95.1%',l:'accuracy'},{v:'RBF',l:'kernel'}]},
+  {icon:'🔻',bg:'rgba(124,106,255,0.12)',title:'PCA',desc:'Dimensionality reduction using principal component analysis — reducing features while preserving 95% variance.',tags:['reduction','sklearn','eigen'],stats:[{v:'95%',l:'variance kept'},{v:'12→3',l:'dims reduced'}]},
+];
+
+const concepts = ['gradient descent','cross-validation','overfitting / underfitting','feature engineering','real-time prediction','model evaluation','data preprocessing','regularization (l1 / l2)','confusion matrix','hyperparameter tuning','ensemble methods','dimensionality reduction','activation functions','bias–variance tradeoff'];
+
+const skillsData = [
+  {name:'Python',pct:92,color:'var(--accent)'},
+  {name:'scikit-learn',pct:88,color:'#a89eff'},
+  {name:'TensorFlow / Keras',pct:75,color:'#ff9a9a'},
+  {name:'Pandas & NumPy',pct:90,color:'var(--accent)'},
+  {name:'Data Visualisation',pct:80,color:'#a89eff'},
+];
+
+// ── RENDER PROJECTS ──
+const grid = document.getElementById('proj-grid');
+projects.forEach((p,i) => {
+  const card = document.createElement('div');
+  card.className = 'proj-card anim';
+  card.style.transitionDelay = (i*0.06)+'s';
+  card.innerHTML = `
+    <span class="proj-arrow">↗</span>
+    <div class="proj-icon" style="background:${p.bg}">${p.icon}</div>
+    <h4>${p.title}</h4>
+    <p>${p.desc.slice(0,90)}…</p>
+    <div class="proj-tags">${p.tags.map(t=>`<span class="proj-tag">${t}</span>`).join('')}</div>
+  `;
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+    card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+  });
+  card.addEventListener('click',()=>openModal(p));
+  grid.appendChild(card);
+});
+
+// ── RENDER CONCEPTS ──
+const cg = document.getElementById('concepts-grid');
+concepts.forEach(c => {
+  const chip = document.createElement('span');
+  chip.className = 'concept-chip';
+  chip.textContent = c;
+  cg.appendChild(chip);
+});
+
+// ── RENDER SKILLS ──
+const sl = document.getElementById('skills-list');
+skillsData.forEach(s => {
+  sl.innerHTML += `
+    <div class="skill-item anim">
+      <div class="skill-header"><span class="skill-name">${s.name}</span><span class="skill-pct">${s.pct}%</span></div>
+      <div class="skill-bar"><div class="skill-fill" style="background:${s.color}" data-pct="${s.pct}"></div></div>
+    </div>`;
+});
+
+// ── PREDICTOR ──
+let currentModel = 'rf';
+const modelMeta = {
+  lr:{name:'linear regression',r2:'0.847',rmse:'₹2.31L',mae:'₹1.68L',mult:1.0},
+  rf:{name:'random forest',r2:'0.923',rmse:'₹1.84L',mae:'₹1.21L',mult:1.08},
+  xgb:{name:'xgboost',r2:'0.941',rmse:'₹1.61L',mae:'₹1.09L',mult:1.12},
+};
+function setModel(m){
+  currentModel=m;
+  document.querySelectorAll('.model-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  updatePredictor();
+}
+function updatePredictor(){
+  const area=+document.getElementById('sl-area').value;
+  const bed=+document.getElementById('sl-bed').value;
+  const loc=+document.getElementById('sl-loc').value;
+  document.getElementById('lbl-area').textContent=area;
+  document.getElementById('lbl-bed').textContent=bed;
+  document.getElementById('lbl-loc').textContent=loc;
+  // Update slider fill
+  ['sl-area','sl-bed','sl-loc'].forEach(id=>{
+    const el=document.getElementById(id);
+    const pct=((el.value-el.min)/(el.max-el.min)*100).toFixed(1);
+    el.style.setProperty('--fill',pct+'%');
+  });
+  const meta=modelMeta[currentModel];
+  const base = area*1200 + bed*250000 + loc*180000;
+  const price = Math.round(base*meta.mult/100)*100;
+  const fmt = n => '₹'+n.toLocaleString('en-IN');
+  document.getElementById('pred-price').textContent=fmt(price);
+  document.getElementById('pred-meta').textContent='model: '+meta.name;
+  document.getElementById('pred-r2').textContent=meta.r2;
+  document.getElementById('pred-rmse').textContent=meta.rmse;
+  document.getElementById('pred-mae').textContent=meta.mae;
+}
+updatePredictor();
+
+// ── MODAL ──
+function openModal(p){
+  document.getElementById('m-icon').textContent=p.icon;
+  document.getElementById('m-title').textContent=p.title;
+  document.getElementById('m-desc').textContent=p.desc;
+  document.getElementById('m-tags').innerHTML=p.tags.map(t=>`<span class="tag">${t}</span>`).join('');
+  document.getElementById('m-stats').innerHTML=p.stats.map(s=>`<div class="modal-stat"><div class="ms-val">${s.v}</div><div class="ms-lbl">${s.l}</div></div>`).join('');
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(e){
+  if(e&&e.target!==document.getElementById('modal-overlay')&&e.type==='click')return;
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+// ── CURSOR GLOW ──
+document.addEventListener('mousemove',e=>{
+  const g=document.getElementById('glow');
+  g.style.left=e.clientX+'px';g.style.top=e.clientY+'px';
+});
+
+// ── INTERSECTION OBSERVER ──
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(en=>{
+    if(en.isIntersecting){
+      en.target.classList.add('visible');
+      // Animate skill bars
+      en.target.querySelectorAll('.skill-fill').forEach(b=>{
+        b.style.width=b.dataset.pct+'%';
+      });
+    }
+  });
+},{threshold:0.1});
+document.querySelectorAll('.anim').forEach(el=>io.observe(el));
+// Also observe skill fills directly
+document.querySelectorAll('.skill-fill').forEach(b=>{
+  io.observe(b.closest('.skill-item')||b);
+});
+</script>
+</body>
+</html>
